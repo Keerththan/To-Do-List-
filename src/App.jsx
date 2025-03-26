@@ -4,6 +4,7 @@ import Content from './Content'
 import Footer from './Footer'
 import { useState } from "react";
 import AddItems from "./AddItems";
+import SearchItem from "./SearchItem";
 
 
 
@@ -49,6 +50,12 @@ function App() {
 
     
   }
+  const [search,setSearch]=useState('')
+  const handleSearch =(e)=>{
+
+
+
+  }
 
  
   return (
@@ -60,8 +67,13 @@ function App() {
         setNewItem={setNewItem}
         handleSubmit={handleSubmit}
      />
+     <SearchItem
+      search={search}
+      setSearch={setSearch}
+      handleSearch={handleSearch}
+     />  
      <Content
-      items={items}
+      items={items.filter((items)=>((items.item).toLowerCase()).includes(search.toLowerCase()))}
       handleCheck={handleCheck}
       handleDelete={handleDelete}
      
