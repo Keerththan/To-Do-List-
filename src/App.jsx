@@ -28,13 +28,36 @@ function App() {
     setItems(listItems);
     localStorage.setItem("todo_list",JSON.stringify(listItems))
   };
+  const[newItem,setNewItem]=useState('')
+
+  const handleSubmit =(e)=>{
+        e.preventDefault()
+        if (!newItem) return
+        console.log(newItem)
+        addItems(newItem)
+        setItems("")
+
+  }
+  const addItems = (item) => {
+    const id=items.length ? items[items.length-1].id+1 :1
+    const addNewItem={id,checked:false,item}
+    const listItems=[...items,addNewItem]
+    setItems(listItems)
+    LocalStorage.setItem("todo_list",JSON.stringify(listItems))
+
+    
+  }
 
  
   return (
     <>
      
      <Header title="To Do List"/>
-     <AddItems/>
+     <AddItems
+        newItem={newItem}
+        setNewItem={setNewItem}
+        handleSubmit={handleSubmit}
+     />
      <Content
       items={items}
       handleCheck={handleCheck}
