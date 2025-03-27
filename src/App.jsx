@@ -2,7 +2,7 @@
 import Header from "./Header"
 import Content from './Content'
 import Footer from './Footer'
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import AddItems from "./AddItems";
 import SearchItem from "./SearchItem";
 
@@ -12,30 +12,49 @@ import SearchItem from "./SearchItem";
 
 function App() { 
 
-  const [items, setItems] = useState(
-  JSON.parse(localStorage.getItem("todo_list")) || []
 
+  const API_URL='http://localhost:3500/items';
+  const [items, setItems] = useState([]);
+  const[newItem,setNewItem]=useState('')
+  const [search,setSearch]=useState('')
 
-  );
+  useEffect(()=>{
+    const fetchItems = async()=>{
+     
+      try{
+        const response= await fetch(API_URL);
+        console.log(response);
+        const listItems=await response.json();
+        console.log(listItems);
+        setItems(listItems);
+        
+
+      }catch(err){
+        console.log(err)
+      }
+    }
+     (async()=>await fetchItems())()
+
+  },[])
 
   const handleCheck = (id) => {
     const listItems = items.map((item) =>
       item.id === id ? { ...item, checked: !item.checked } : item
     );
     setItems(listItems);
-    localStorage.setItem("todo_list",JSON.stringify(listItems))
+    //localStorage.setItem("todo_list",JSON.stringify(listItems))
   };
   const handleDelete = (id) => {
     const listItems = items.filter((item) => item.id !== id);
     setItems(listItems);
-    localStorage.setItem("todo_list",JSON.stringify(listItems))
+    //localStorage.setItem("todo_list",JSON.stringify(listItems))
   };
-  const[newItem,setNewItem]=useState('')
+  
 
   const handleSubmit =(e)=>{
         e.preventDefault()
         if (!newItem) return
-        console.log(newItem)
+        
         addItems(newItem)
         setNewItem('')
       
@@ -47,11 +66,11 @@ function App() {
     const addNewItem={id,checked:false,item}
     const listItems=[...items,addNewItem]
     setItems(listItems)
-    localStorage.setItem("todo_list",JSON.stringify(listItems))
+    //localStorage.setItem("todo_list",JSON.stringify(listItems))
 
     
   }
-  const [search,setSearch]=useState('')
+ 
   const handleSearch =(e)=>{
 
 
