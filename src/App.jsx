@@ -6,7 +6,7 @@ import { useState,useEffect } from "react";
 import AddItems from "./AddItems";
 import SearchItem from "./SearchItem";
 import { LiaSearchLocationSolid } from "react-icons/lia";
-
+import apiRequest from "./apiRequest";
 
 
 
@@ -69,12 +69,21 @@ function App() {
 
 
   }
-  const addItems = (item) => {
+  const addItems = async (item) => {
     const id=items.length ? items[items.length-1].id+1 :1
     const addNewItem={id,checked:false,item}
     const listItems=[...items,addNewItem]
     setItems(listItems)
     //localStorage.setItem("todo_list",JSON.stringify(listItems))
+    const postOptions={
+      method:'POST',
+      headers:{
+            'Content-type':'application/json'
+      },
+      body:JSON.stringify(addNewItem)
+    }
+    const result= await apiRequest(API_URL,postOptions)
+    if(result)setFetchError(result)
 
     
   }
