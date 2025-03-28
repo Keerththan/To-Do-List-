@@ -7,7 +7,7 @@ const Content = ({items,handleCheck,handleDelete}) => {
   
 
   return (
-    <main>
+    <>
       {items.length > 0 ? (
       <ItemsList 
          items={items}
@@ -19,7 +19,7 @@ const Content = ({items,handleCheck,handleDelete}) => {
       ) : (
         <p>No items</p>
       )}
-    </main>
+    </>
   );
 };
 

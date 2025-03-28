@@ -5,6 +5,7 @@ import Footer from './Footer'
 import { useState,useEffect } from "react";
 import AddItems from "./AddItems";
 import SearchItem from "./SearchItem";
+import { LiaSearchLocationSolid } from "react-icons/lia";
 
 
 
@@ -17,20 +18,27 @@ function App() {
   const [items, setItems] = useState([]);
   const[newItem,setNewItem]=useState('')
   const [search,setSearch]=useState('')
+  const [fetchError,setFetchError]=useState(null)
+  const[isLoading,setIsLoading]=useState(true)
 
   useEffect(()=>{
     const fetchItems = async()=>{
      
       try{
         const response= await fetch(API_URL);
+        if (!response.ok) throw Error('Did not receive expected data');
         console.log(response);
         const listItems=await response.json();
         console.log(listItems);
         setItems(listItems);
+        setFetchError(null)
         
 
       }catch(err){
-        console.log(err)
+        setFetchError(err.message)
+      }finally{
+        setIsLoading(false)
+
       }
     }
      (async()=>await fetchItems())()
@@ -92,13 +100,19 @@ function App() {
       setSearch={setSearch}
       handleSearch={handleSearch}
      />  
-     <Content
+
+     <main>
+      {isLoading && <p>Loading Items...</p>}
+    {!isLoading && <Content
       items={items.filter((items)=>((items.item).toLowerCase()).includes(search.toLowerCase()))}
       handleCheck={handleCheck}
       handleDelete={handleDelete}
      
      
-     />
+     />}
+     </main>
+     {fetchError && <p>{`Error: ${fetchError}`}</p>}
+    
      <Footer length={items.length}/>
      
       
